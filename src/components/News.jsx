@@ -3,11 +3,14 @@ import { useState } from "react";
 import moment from "moment";
 import { useGetCryptoNewsQuery } from "../services/cryptoNewsApi";
 import { useGetCryptosQuery } from "../services/cryptoApi";
-const { Text, Title } = Typography;
-const { Option } = Select;
-const demoImage =
-  "http://coinrevolution.com/wp-content/uploads/2020/06/cryptonews.jpg";
+import Masonry from "react-masonry-css";
+
 const News = ({ simplified }) => {
+  const { Text, Title } = Typography;
+  const { Option } = Select;
+
+  const demoImage =
+    "http://coinrevolution.com/wp-content/uploads/2020/06/cryptonews.jpg";
   const [newsCategory, setNewsCategory] = useState("Cryptocurrency");
   const { data: cryptoNews } = useGetCryptoNewsQuery({
     count: simplified ? 10 : 100,
@@ -36,8 +39,12 @@ const News = ({ simplified }) => {
         </Col>
       )}
 
-      {cryptoNews.value.map((news, i) => (
-        <Col xs={24} sm={12} lg={8} key={i}>
+      <Masonry
+        breakpointCols={3}
+        className="my-masonry-grid"
+        columnClassName="my-masonry-grid_column"
+      >
+        {cryptoNews.value.map((news, i) => (
           <Card hoverable className="news-card">
             <a href={news.url} target="_blank" rel="noreferrer">
               <div className="news-image-container">
@@ -55,8 +62,8 @@ const News = ({ simplified }) => {
                 />
               </div>
               <p>
-                {news.description > 100
-                  ? `${news.description.substring(0, 100)}...`
+                {news.description.length > 100
+                  ? `${news.description.substring(0, 170)}...`
                   : news.description}
               </p>
               <div className="provider-container">
@@ -79,8 +86,8 @@ const News = ({ simplified }) => {
               </div>
             </a>
           </Card>
-        </Col>
-      ))}
+        ))}
+      </Masonry>
     </Row>
   );
 };
